@@ -22,10 +22,12 @@ export const registerUser = async (
 
 export const loginUser = async (email: string, password: string) => {
   try {
+    console.log('Données envoyées:', { email, password });
     const response = await axios.post(`${API_URL}/login`, {
       email,
       password,
     });
+    console.log('Réponse reçue:', response.data);
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la connexion:', error);
