@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/authContext';
+import CardItem from '../../../components/CardItem'; // Assure-toi que le chemin est correct
 
 interface Card {
   _id: string;
@@ -47,23 +48,17 @@ export default function BoardPage() {
     }
   };
 
-  const handleStatusChange = async (cardId: string, newStatus: string) => {
-    try {
-      const res = await axios.put(
-        `http://localhost:5000/api/cards/${cardId}`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      // Met à jour la carte dans l'état local
-      setCards((prevCards) =>
-        prevCards.map((card) => (card._id === cardId ? res.data : card)),
-      );
-    } catch (error) {
-      console.error(
-        'Erreur lors de la mise à jour du statut de la carte :',
-        error,
-      );
-    }
+  // Fonction pour mettre à jour la carte dans l'état local après modification
+  const handleUpdateCard = (updatedCard: Card) => {
+    setCards((prevCards) =>
+      prevCards.map((card) =>
+        card._id === updatedCard._id ? updatedCard : card,
+      ),
+    );
+  };
+
+  const handleDeleteCard = (cardId: string) => {
+    setCards((prevCards) => prevCards.filter((card) => card._id !== cardId));
   };
 
   return (
@@ -74,15 +69,12 @@ export default function BoardPage() {
         <ul>
           {cards.map((card) => (
             <li key={card._id}>
-              <strong>{card.title}</strong> — Statut :
-              <select
-                value={card.status}
-                onChange={(e) => handleStatusChange(card._id, e.target.value)}
-              >
-                <option value='todo'>À faire</option>
-                <option value='in-progress'>En cours</option>
-                <option value='done'>Terminé</option>
-              </select>
+              <CardItem
+                card={card}
+                token={token!}
+                onUpdate={handleUpdateCard}
+                onDelete={handleDeleteCard}
+              />
             </li>
           ))}
         </ul>

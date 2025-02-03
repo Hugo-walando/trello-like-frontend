@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='fr'>
-      <body>
+      <body suppressHydrationWarning>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
