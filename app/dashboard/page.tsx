@@ -4,6 +4,7 @@ import { useAuth } from '../context/authContext';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import Link from 'next/link';
 
 interface Board {
   _id: string;
@@ -38,7 +39,7 @@ export default function Dashboard() {
 
   const handleCreateBoard = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newBoardTitle.trim()) return; // Vérifier que le titre n'est pas vide
+    if (!newBoardTitle.trim()) return;
 
     try {
       const res = await axios.post(
@@ -46,9 +47,8 @@ export default function Dashboard() {
         { title: newBoardTitle },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-      // Met à jour la liste des tableaux avec le nouveau tableau
       setBoards((prevBoards) => [...prevBoards, res.data]);
-      setNewBoardTitle(''); // Réinitialise le champ de saisie
+      setNewBoardTitle('');
     } catch (error) {
       console.error('Erreur lors de la création du tableau :', error);
     }
@@ -60,13 +60,21 @@ export default function Dashboard() {
     <div>
       <h1>Bienvenue {user?.username} !</h1>
       <h2>Vos tableaux :</h2>
-      <ul>
-        {boards.length > 0 ? (
-          boards.map((board) => <li key={board._id}>{board.title}</li>)
-        ) : (
-          <p>Aucun tableau pour le moment.</p>
-        )}
-      </ul>
+      {boards.length > 0 ? (
+        <ul>
+          {boards.map((board) => (
+            <li key={board._id} style={{ marginBottom: '1rem' }}>
+              <Link href={`/boards/${board._id}`}>
+                <button style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                  {board.title}
+                </button>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Aucun tableau pour le moment.</p>
+      )}
 
       {/* Formulaire pour créer un nouveau tableau */}
       <form onSubmit={handleCreateBoard}>

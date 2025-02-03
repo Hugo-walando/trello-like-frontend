@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation'; // Pour récupérer les paramètres de l'URL
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '@/context/authContext';
+import { useAuth } from '../../context/authContext';
 
 interface Card {
   _id: string;
