@@ -1,55 +1,49 @@
 'use client';
 
-import React, { useState } from 'react';
-import { loginUser } from '../../services/authService';
+import { useAuth } from '../context/authContext';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const Login = () => {
+  const { login } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await loginUser(email, password);
-      console.log('Connexion réussie:', data);
-      // Stocke le token dans le localStorage ou un cookie si nécessaire
-      localStorage.setItem('token', data.token);
-      // Redirige vers la page d'accueil ou une autre page après connexion
-      router.push('/');
-    } catch (err) {
-      setError('Erreur lors de la connexion. Vérifiez vos identifiants.');
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+      });
+
+      login(res.data.token);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Erreur de connexion', error);
     }
   };
 
   return (
-    <div>
-      <h1>Connexion</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Mot de passe</label>
-          <input
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type='submit'>Se connecter</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type='email'
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder='Email'
+        required
+      />
+      <input
+        type='password'
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder='Mot de passe'
+        required
+      />
+      <button type='submit'>Se connecter</button>
+    </form>
   );
 };
 
