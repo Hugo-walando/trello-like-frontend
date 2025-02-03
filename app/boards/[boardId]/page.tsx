@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation'; // Pour récupérer les paramètres de l'URL
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/authContext';
@@ -8,17 +8,15 @@ import { useAuth } from '../../context/authContext';
 interface Card {
   _id: string;
   title: string;
-  status: string; // Par exemple "todo", "in-progress", "done"
+  status: string;
 }
 
 export default function BoardPage() {
-  // Récupère l'ID du tableau depuis l'URL
   const { boardId } = useParams() as { boardId: string };
   const { token } = useAuth();
   const [cards, setCards] = useState<Card[]>([]);
   const [newCardTitle, setNewCardTitle] = useState<string>('');
 
-  // Récupère les cartes du tableau
   useEffect(() => {
     if (boardId && token) {
       axios
@@ -32,7 +30,6 @@ export default function BoardPage() {
     }
   }, [boardId, token]);
 
-  // Fonction pour créer une nouvelle carte
   const handleCreateCard = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCardTitle.trim()) return;
@@ -50,6 +47,25 @@ export default function BoardPage() {
     }
   };
 
+  const handleStatusChange = async (cardId: string, newStatus: string) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/cards/${cardId}`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      // Met à jour la carte dans l'état local
+      setCards((prevCards) =>
+        prevCards.map((card) => (card._id === cardId ? res.data : card)),
+      );
+    } catch (error) {
+      console.error(
+        'Erreur lors de la mise à jour du statut de la carte :',
+        error,
+      );
+    }
+  };
+
   return (
     <div>
       <h1>Détails du tableau</h1>
@@ -58,7 +74,15 @@ export default function BoardPage() {
         <ul>
           {cards.map((card) => (
             <li key={card._id}>
-              {card.title} — Statut : {card.status}
+              <strong>{card.title}</strong> — Statut :
+              <select
+                value={card.status}
+                onChange={(e) => handleStatusChange(card._id, e.target.value)}
+              >
+                <option value='todo'>À faire</option>
+                <option value='in-progress'>En cours</option>
+                <option value='done'>Terminé</option>
+              </select>
             </li>
           ))}
         </ul>
