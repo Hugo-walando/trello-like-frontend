@@ -78,10 +78,15 @@ const CardItem = ({ card, token, onUpdate, onDelete }: CardProps) => {
 
   return (
     <div
+      className='bg-white p-4 rounded-md relative'
       style={{
-        marginBottom: '1rem',
-        border: '1px solid #ccc',
-        padding: '0.5rem',
+        border: `2px solid ${
+          card.status === 'in-progress'
+            ? '#FABD05'
+            : card.status === 'done'
+            ? '#33A853'
+            : '#EA4336'
+        }`,
       }}
     >
       {isEditing ? (
@@ -118,16 +123,9 @@ const CardItem = ({ card, token, onUpdate, onDelete }: CardProps) => {
       </div>
       <button
         onClick={handleDelete}
-        style={{
-          marginTop: '0.5rem',
-          background: 'red',
-          color: 'white',
-          border: 'none',
-          padding: '0.3rem 0.6rem',
-          cursor: 'pointer',
-        }}
+        className='absolute right-1 top-1 px-3  rounded-md text-white text-lg bg-red-600'
       >
-        Supprimer
+        &times;
       </button>
     </div>
   );

@@ -59,7 +59,7 @@ export default function Dashboard() {
   return (
     <div className='w-600px mx-auto'>
       <h1 className='mb-10 mt-10'>Hey {user?.username} !</h1>
-      <h3 className='mb-4'>Projets</h3>
+      <h3 className='mb-4'>projets</h3>
 
       {boards.length > 0 ? (
         <ul className='w-400px flex flex-col items-center sm:grid sm:grid-cols-2 gap-4 '>

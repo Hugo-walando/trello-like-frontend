@@ -63,10 +63,10 @@ export default function BoardPage() {
 
   return (
     <div>
-      <h1>Détails du tableau</h1>
-      <h2>Cartes :</h2>
+      <h1 className='mb-10 mt-10'>Liste des taches</h1>
+      <h3 className='mb-4'>taches</h3>
       {cards.length > 0 ? (
-        <ul>
+        <ul className='w-400px flex flex-col items-center sm:grid sm:grid-cols-2 gap-4 '>
           {cards.map((card) => (
             <li key={card._id}>
               <CardItem
@@ -83,15 +83,21 @@ export default function BoardPage() {
       )}
 
       {/* Formulaire pour ajouter une nouvelle carte */}
-      <form onSubmit={handleCreateCard}>
+      <form onSubmit={handleCreateCard} className='mt-5'>
         <input
           type='text'
           value={newCardTitle}
           onChange={(e) => setNewCardTitle(e.target.value)}
           placeholder='Titre de la carte'
           required
+          className='rounded-full w-[350px] bg-white shadow-sm px-5 py-3'
         />
-        <button type='submit'>Ajouter une carte</button>
+        <button
+          type='submit'
+          className='bg-blue-500 shadow-lg shadow-blue-500/50 ml-4 px-4 py-2 rounded-md text-white'
+        >
+          Ajouter une carte
+        </button>
       </form>
     </div>
   );
