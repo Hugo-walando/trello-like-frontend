@@ -57,15 +57,16 @@ export default function Dashboard() {
   if (!token) return <p>Redirection en cours...</p>;
 
   return (
-    <div>
-      <h1>Bienvenue {user?.username} !</h1>
-      <h2>Vos tableaux :</h2>
+    <div className='w-600px mx-auto'>
+      <h1 className='mb-10 mt-10'>Hey {user?.username} !</h1>
+      <h3 className='mb-4'>Projets</h3>
+
       {boards.length > 0 ? (
-        <ul>
+        <ul className='w-400px flex flex-col items-center sm:grid sm:grid-cols-2 gap-4 '>
           {boards.map((board) => (
             <li key={board._id} style={{ marginBottom: '1rem' }}>
               <Link href={`/boards/${board._id}`}>
-                <button style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                <button className='font-bold text-2xl bg-white py-3 px-6 w-60 h-28 shadow-md rounded-lg'>
                   {board.title}
                 </button>
               </Link>
@@ -73,7 +74,7 @@ export default function Dashboard() {
           ))}
         </ul>
       ) : (
-        <p>Aucun tableau pour le moment.</p>
+        <p>Aucun projet pour le moment.</p>
       )}
 
       {/* Formulaire pour créer un nouveau tableau */}
@@ -84,8 +85,14 @@ export default function Dashboard() {
           onChange={(e) => setNewBoardTitle(e.target.value)}
           placeholder='Titre du tableau'
           required
+          className='rounded-full w-[350px] bg-white shadow-sm px-5 py-3'
         />
-        <button type='submit'>Créer un tableau</button>
+        <button
+          className='bg-blue-500 shadow-lg shadow-blue-500/50 ml-4 px-4 py-2 rounded-md text-white'
+          type='submit'
+        >
+          Ajouter
+        </button>
       </form>
     </div>
   );

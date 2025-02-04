@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: #F9FAFE;
+  display: flex;
+  justify-content: center;
+}
+
+h1, h2 {
+  color: #35425E;
+  font-weight: bold;
+  font-size: 50px;
+}
+
+h3 {
+  color: #7B89B5;
+  font-weight: 600;
+  font-size: 30px;
+}
